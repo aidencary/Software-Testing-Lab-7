@@ -1,0 +1,4 @@
+We will not test the repository classes with Unit tests because we are essentially just
+using the spring boot defaults, and that code has its own tests.  All we do is
+use the interface.  If we were doing something different, custom, or complex here we would
+test that.  But, we aren't.

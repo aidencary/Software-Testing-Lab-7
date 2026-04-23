@@ -1,0 +1,18 @@
+Unit Tests for Javascript are similar in some ways to unit test for Java.
+Jest is a very popular testing framework for Javascript.  HOWEVER, Jest is
+built on the old form of JS, not the newer ESM, that Vite, uses.  Since we're
+using Vite for our frontend, Jest is not recommended, because it is likely
+to create conflicts.  Instead, Vite built its own testing framework,
+called vitest, which is built to be similar to Jest.  We'll use vitest.
+
+Unlike conventional Maven structure, The test classes are placed in the
+same directory as the source code ("Co-located"), and have the same name
+and extension as the classes they are testing.  The difference is that
+they have the word 'test' in between the name of the class and the extension.
+i.e. CourseList.tsx -> CourseList.test.tsx
+
+Also, just like we didn't test SpringBoot itself in the Backend tests, we
+won't test React itself in the Frontend tests.  Instead, we will test only
+the custom components that we have made.
+
+Finally, for code coverage, we will use the vitest v8 tool (just don't drink it!)

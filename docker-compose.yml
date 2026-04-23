@@ -1,0 +1,45 @@
+# /docker-compose.yml
+
+services:
+  backend:   #Name of the service
+    build:
+      context: ./backend # Point this to backend Dockerfile
+    ports:
+      - "8080:8080"
+      # This connects the port of the computer to the port of the container--so when you
+      # hit port 8080 in the browser, you will be directed to the container's 8080 port.
+      # Syntax--> ContainerPort:RunnerPort (Laptop)
+    environment:
+      # You can pass database URLs or other Spring properties here if needed later
+      - SPRING_PROFILES_ACTIVE=dev
+
+  frontend:
+    build:
+      context: ./frontend # Point this to frontend Dockerfile
+    ports:
+      - "5173:5173"
+      # This ensures Vite can talk to Tomcat from inside the Docker network
+      # This connects the port of the computer to the port of the container--so when you
+      # hit port 5173 in the browser, you will be directed to the container's 5173 port.
+      # Syntax--> ContainerPort:RunnerPort (Laptop)
+    depends_on:
+      - backend
+      # depends_on ensures the listed services start before the current service.
+
+  end2end-tests:
+      build:
+        context: ./end2end-tests
+      depends_on:
+        - backend
+        - frontend
+        # depends on both the Tomcat server in the backend and the Vite server in the
+        # frontend being spun up.
+      profiles:
+        - testing
+        # profile allows us to skip tests when we normally spin it up, but run the tests
+        # when we want to.
+      volumes:
+        - ./end2end-tests/screenshots:/tests/screenshots
+        # links a new directory inside this folder to the tests/screenshots directory
+        # inside the container.  So the container can save things outside itself.
+        # Otherwise, the screenshots would be destroyed when the container came down.

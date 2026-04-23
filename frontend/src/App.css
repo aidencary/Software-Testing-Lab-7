@@ -1,0 +1,33 @@
+/* The main navigation bar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+}
+
+/* The container holding the links */
+.nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+/* Individual links */
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.2s ease-in-out;
+}
+
+/* Add a hover effect! */
+.nav-link:hover {
+    color: #646cff;
+}
+
+/* The wrapper for your pages */
+.main-content {
+    padding: 20px;
+}

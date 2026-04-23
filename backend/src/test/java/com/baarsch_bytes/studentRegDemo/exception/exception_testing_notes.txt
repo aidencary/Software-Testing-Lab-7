@@ -1,0 +1,6 @@
+Normally the exceptions section does not require tests, because the classes are simplistic.
+Unit tests would be added to verify any custom methods--but are unnecessary for boilerplate
+code--the specific exceptions typically don't move past tacking a custom message on the base
+Exception constructor.
+
+The GlobalExceptionHandler

@@ -1,0 +1,3 @@
+Normally the DTO section does not require tests, because the classes are simplistic.
+Unit tests would be added to verify any custom methods--but are unnecessary for boilerplate
+getters, setters, and constructors.

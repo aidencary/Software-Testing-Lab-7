@@ -1,0 +1,23 @@
+# Node
+node_modules/
+
+# IntelliJ / JetBrains (keep the few .xml files already tracked)
+.idea/compiler.xml
+.idea/encodings.xml
+.idea/jarRepositories.xml
+.idea/workspace.xml
+.idea/shelf/
+.idea/httpRequests/
+.idea/dataSources/
+.idea/dataSources.local.xml
+*.iws
+
+# Maven
+target/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
