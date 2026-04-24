@@ -48,6 +48,11 @@ jobs:
             --abort-on-container-exit \
             --exit-code-from end2end-tests
 
+      # Ensure containers and networks are cleaned up even when tests fail.
+      - name: Tear down docker-compose stack
+        if: always()
+        run: docker compose --profile testing down --remove-orphans
+
       # All post-run steps use `if: always()` so artifacts upload even when
       # the tests failed -- failure is exactly when you most want the screenshots.
 
@@ -66,14 +71,14 @@ jobs:
       # Publish them to the Checks API for PR-level pass/fail display.
       - name: Publish E2E test results
         uses: EnricoMi/publish-unit-test-result-action@v2
-        if: always()
+        if: always() && hashFiles('end2end-tests/target/surefire-reports/*.xml') != ''
         with:
           check_name: E2E Test Results
           files: end2end-tests/target/surefire-reports/*.xml
 
       # Also upload the raw Surefire XMLs as an artifact for debugging.
       - name: Upload E2E Surefire reports
-        if: always()
+        if: always() && hashFiles('end2end-tests/target/surefire-reports/*.xml') != ''
         uses: actions/upload-artifact@v4
         with:
           name: e2e-surefire-reports

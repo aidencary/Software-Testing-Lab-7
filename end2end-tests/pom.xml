@@ -46,11 +46,12 @@
                 <artifactId>maven-clean-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <excludeDefaultDirectories>false</excludeDefaultDirectories>
+                    <excludeDefaultDirectories>true</excludeDefaultDirectories>
                     <filesets>
                         <fileset>
                             <directory>${project.build.directory}</directory>
                             <excludes>
+                                <exclude>surefire-reports</exclude>
                                 <exclude>surefire-reports/**</exclude>
                             </excludes>
                         </fileset>
