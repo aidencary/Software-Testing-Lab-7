@@ -1,13 +1,13 @@
 {
   "info": {
     "name": "StudentRegDemo API Tests",
-    "description": "API-level tests for the StudentRegDemo Spring Boot backend. Run via Newman in CI (see .github/workflows/api-tests.yml) or locally against a backend booted on http://localhost:8080.",
+    "description": "API-level tests for the StudentRegDemo Spring Boot backend. Run via Newman in CI (see .github/workflows/api-tests.yml) or locally against a backend booted on http://localhost:8081.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "variable": [
     {
       "key": "baseUrl",
-      "value": "http://localhost:8080",
+      "value": "http://localhost:8081",
       "type": "string"
     }
   ],
