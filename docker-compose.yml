@@ -5,9 +5,9 @@ services:
     build:
       context: ./backend # Point this to backend Dockerfile
     ports:
-      - "8080:8080"
+      - "8081:8081"
       # This connects the port of the computer to the port of the container--so when you
-      # hit port 8080 in the browser, you will be directed to the container's 8080 port.
+      # hit port 8081 in the browser, you will be directed to the container's 8081 port.
       # Syntax--> ContainerPort:RunnerPort (Laptop)
     environment:
       # You can pass database URLs or other Spring properties here if needed later
