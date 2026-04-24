@@ -1,12 +1,26 @@
 package com.baarsch_bytes.studentRegDemo.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+
 import java.util.Set;
 
 public class CourseRequest {
+    @NotNull(message = "Name is required")
+    @Size(min = 1, max = 255, message = "Name must be between 1 and 255 characters")
     private String name;
+
+    @Min(value = 1, message = "No Instructors have negative Ids")
     private Long instructor;
+
+    @Min(value = 1, message = "Class must allow at least one student")
     private Integer maxSize;
+
+    @NotNull(message = "Room is required")
+    @Size(min = 1, max = 255, message = "Room must be between 1 and 255 characters")
     private String room;
+
     private Set<Long> roster;
 
     public CourseRequest(){}
