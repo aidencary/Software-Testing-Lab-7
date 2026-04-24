@@ -1,0 +1,80 @@
+# e2e-tests.yml
+# The SLOW tier of the pipeline. Selenium end-to-end tests driving a headless
+# Chrome against a full Docker stack (backend + frontend + e2e-tests containers)
+# via docker-compose.
+
+name: E2E Tests
+
+# Trigger on PRs and pushes to main, plus manual trigger option.
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+
+  e2e-tests:
+    name: Selenium end-to-end tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      # ubuntu-latest runners ship with Docker + Compose v2 preinstalled, so
+      # no setup step is needed. We just bring the stack up.
+      #
+      # Flags explained:
+      #   --profile testing        -> activates the `end2end-tests` service, which
+      #                               is profile-gated in docker-compose.yml so
+      #                               normal `docker compose up` skips it.
+      #   --build                  -> force rebuild so image caches don't mask
+      #                               source changes.
+      #   --abort-on-container-exit-> tear everything down the moment any
+      #                               container exits (i.e., when the test
+      #                               container finishes).
+      #   --exit-code-from ...     -> propagate the test container's exit code
+      #                               as the step's exit code, so failing tests
+      #                               fail the workflow.
+      - name: Run docker-compose E2E stack
+        run: |
+          docker compose --profile testing up \
+            --build \
+            --abort-on-container-exit \
+            --exit-code-from end2end-tests
+
+      # All post-run steps use `if: always()` so artifacts upload even when
+      # the tests failed -- failure is exactly when you most want the screenshots.
+
+      # Selenium dumps PNGs into end2end-tests/screenshots/ via a volume mount.
+      # Bundle them into an artifact reviewers can download as a zip from the
+      # Actions run page. This is the primary visual display for E2E failures.
+      - name: Upload Selenium screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: selenium-screenshots
+          path: end2end-tests/screenshots/
+
+      # Second volume mount in docker-compose.yml exposes the container's
+      # Surefire XMLs at end2end-tests/target/surefire-reports/ on the host.
+      # Publish them to the Checks API for PR-level pass/fail display.
+      - name: Publish E2E test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          check_name: E2E Test Results
+          files: end2end-tests/target/surefire-reports/*.xml
+
+      # Also upload the raw Surefire XMLs as an artifact for debugging.
+      - name: Upload E2E Surefire reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: e2e-surefire-reports
+          path: end2end-tests/target/surefire-reports/

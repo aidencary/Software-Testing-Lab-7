@@ -1,0 +1,130 @@
+# unit-tests.yml
+# The FAST tier of the pipeline. Runs on every push and every pull request.
+# Covers:
+#   * Backend JUnit + Mockito unit tests (mvn test via verify)
+#   * Backend JaCoCo coverage report + 80% branch-coverage gate
+#   * Frontend Vitest unit tests + v8 coverage
+
+name: Unit Tests
+
+# When does this workflow run?
+#   push          -> every commit pushed to any branch (fast feedback for devs)
+#   pull_request  -> every PR opened / updated (gate before merge)
+on:
+  push:
+  pull_request:
+
+# GITHUB_TOKEN permissions required by the third-party actions we call.
+# checks + pull-requests are needed by EnricoMi/publish-unit-test-result-action
+# and madrapps/jacoco-report so they can post results on the PR.
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+
+  # BACKEND: Spring Boot / Maven / JUnit / JaCoCo
+  backend-unit-tests:
+    name: Backend unit tests + coverage gate
+    runs-on: ubuntu-latest
+
+    steps:
+      # Check the repo out onto the runner's filesystem.
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      # Install JDK 25 (Temurin build) and wire up Maven's local cache.
+      # `cache: 'maven'` keys on the pom.xml hash so dependency downloads are
+      # only paid when dependencies actually change.
+      - name: Set up JDK 25 (Temurin) with Maven cache
+        uses: actions/setup-java@v4
+        with:
+          java-version: '25'
+          distribution: 'temurin'
+          cache: 'maven'
+
+      # `mvn verify` (NOT `mvn test`) because the JaCoCo branch-coverage
+      # threshold check in backend/pom.xml is bound to the verify phase.
+      # Using `test` would skip the gate. `-B` = batch mode (no ANSI noise).
+      - name: Run backend unit tests + coverage gate
+        working-directory: ./backend
+        run: mvn -B verify
+
+      # Publish Surefire JUnit XMLs as a GitHub Check so pass/fail counts show
+      # up directly on the commit and PR, not buried in a log.
+      # `if: always()` ensures we publish even when the tests fail.
+      - name: Publish backend test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          check_name: Backend Test Results
+          files: backend/target/surefire-reports/*.xml
+
+      # Comment coverage numbers (overall + changed-files) on the PR.
+      # Fails the check if either metric drops below 80% branches.
+      # Only runs on PRs (push events have no PR to comment on).
+      - name: Comment JaCoCo coverage on PR
+        if: github.event_name == 'pull_request'
+        uses: madrapps/jacoco-report@v1.7.2
+        with:
+          paths: backend/target/site/jacoco/jacoco.xml
+          token: ${{ secrets.GITHUB_TOKEN }}
+          min-coverage-overall: 80
+          min-coverage-changed-files: 80
+          title: Backend Code Coverage
+
+      # Upload the full JaCoCo HTML report as a workflow artifact so reviewers
+      # can drill into class-by-class coverage without cloning the repo.
+      - name: Upload JaCoCo HTML report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: backend/target/site/jacoco/
+
+  # FRONTEND: React + Vite + Vitest
+  frontend-unit-tests:
+    name: Frontend unit tests + coverage
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v5
+
+      # Install Node 20 LTS with npm cache keyed on frontend/package-lock.json.
+      - name: Set up Node 20 with npm cache
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+          cache-dependency-path: frontend/package-lock.json
+
+      # `npm ci` (not `npm install`) for reproducible, lockfile-exact installs.
+      - name: Install frontend dependencies
+        working-directory: ./frontend
+        run: npm ci
+
+      # Runs vitest in CI mode (single run, no watch), emits a JUnit XML so the
+      # publish step below can post a Check, and writes a v8 coverage report.
+      # `test:ci` script is defined in frontend/package.json.
+      - name: Run frontend unit tests + coverage
+        working-directory: ./frontend
+        run: npm run test:ci
+
+      # Publish vitest JUnit XML to the GitHub Check surface, same way as
+      # the backend. Clear pass/fail count on the PR.
+      - name: Publish frontend test results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          check_name: Frontend Test Results
+          files: frontend/test-results/junit.xml
+
+      # Upload v8 coverage HTML for reviewers.
+      - name: Upload frontend coverage report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-coverage
+          path: frontend/coverage/

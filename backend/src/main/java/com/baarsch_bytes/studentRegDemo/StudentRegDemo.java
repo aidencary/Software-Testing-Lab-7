@@ -10,7 +10,7 @@ public class StudentRegDemo {
         // boots up the H2 database, and launches the web server.
         SpringApplication.run(StudentRegDemo.class, args);
 
-        System.out.println("Arkansas Student API is live at http://localhost:8080");
+        System.out.println("Arkansas Student API is live at http://localhost:8081");
     }
 
 }

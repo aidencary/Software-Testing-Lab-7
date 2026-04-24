@@ -43,3 +43,9 @@ services:
         # links a new directory inside this folder to the tests/screenshots directory
         # inside the container.  So the container can save things outside itself.
         # Otherwise, the screenshots would be destroyed when the container came down.
+        - ./end2end-tests/target/surefire-reports:/tests/target/surefire-reports
+        # Second mount: exposes the JUnit Surefire XML reports produced by
+        # `mvn test` inside the container so the CI workflow (e2e-tests.yml)
+        # can publish them to the GitHub Checks API. Local `docker compose`
+        # runs now also get the XMLs on the host -- harmless, and useful for
+        # debugging failed e2e runs without diving into the container.

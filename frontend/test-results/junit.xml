@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites name="vitest tests" tests="24" failures="0" errors="0" time="3.4781806">
+    <testsuite name="src/components/CourseList.test.tsx" timestamp="2026-04-24T02:44:19.175Z" hostname="DESKTOP-0BQKLJ4" tests="5" failures="0" errors="0" skipped="0" time="2.0368172">
+        <testcase classname="src/components/CourseList.test.tsx" name="CourseList Component &gt; renders loading state initially, then displays the course table" time="0.2954708">
+        </testcase>
+        <testcase classname="src/components/CourseList.test.tsx" name="CourseList Component &gt; allows a user to add a new course" time="0.6874628">
+            <system-out>
+I saved the courses--now, to update the fields.
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/components/CourseList.test.tsx" name="CourseList Component &gt; allows a user to delete a course" time="0.1868221">
+        </testcase>
+        <testcase classname="src/components/CourseList.test.tsx" name="CourseList Component &gt; allows a user to edit a course" time="0.5160758">
+        </testcase>
+        <testcase classname="src/components/CourseList.test.tsx" name="CourseList Component &gt; allows a user to add a student to a course" time="0.3375917">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/components/StudentList.test.tsx" timestamp="2026-04-24T02:44:19.184Z" hostname="DESKTOP-0BQKLJ4" tests="4" failures="0" errors="0" skipped="0" time="1.3549291">
+        <testcase classname="src/components/StudentList.test.tsx" name="StudentList Component &gt; renders loading state initially, then displays the student table" time="0.2449821">
+        </testcase>
+        <testcase classname="src/components/StudentList.test.tsx" name="StudentList Component &gt; allows a user to add a new student" time="0.6537233">
+            <system-out>
+I saved the students--now, to update the fields.
+
+            </system-out>
+        </testcase>
+        <testcase classname="src/components/StudentList.test.tsx" name="StudentList Component &gt; allows a user to delete a student" time="0.1420589">
+        </testcase>
+        <testcase classname="src/components/StudentList.test.tsx" name="StudentList Component &gt; allows a user to edit a student" time="0.2999109">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/services/CourseService.test.ts" timestamp="2026-04-24T02:44:19.188Z" hostname="DESKTOP-0BQKLJ4" tests="10" failures="0" errors="0" skipped="0" time="0.0585304">
+        <testcase classname="src/services/CourseService.test.ts" name="CourseService &gt; getAllCourses &gt; returns a list of courses on success" time="0.019108">
+        </testcase>
+        <testcase classname="src/services/CourseService.test.ts" name="CourseService &gt; getAllCourses &gt; throws an error when the response is not ok" time="0.0085526">
+        </testcase>
+        <testcase classname="src/services/CourseService.test.ts" name="CourseService &gt; addStudentToCourse &gt; sends a PUT request and returns success message" time="0.0058883">
+        </testcase>
+        <testcase classname="src/services/CourseService.test.ts" name="CourseService &gt; addStudentToCourse &gt; throws an error with the server message if course is full" time="0.0015243">
+        </testcase>
+        <testcase classname="src/services/CourseService.test.ts" name="CourseService &gt; removeStudentFromCourse &gt; sends a PUT request and returns success message" time="0.0041368">
+        </testcase>
+        <testcase classname="src/services/CourseService.test.ts" name="CourseService &gt; getEnrollmentCount &gt; returns the number of students" time="0.0010145">
+        </testcase>
+        <testcase classname="src/services/CourseService.test.ts" name="CourseService &gt; getEnrollmentCount &gt; returns -1 if the response is not ok" time="0.0013396">
+        </testcase>
+        <testcase classname="src/services/CourseService.test.ts" name="CourseService &gt; addCourse &gt; sends a POST request and returns a string message" time="0.0024233">
+        </testcase>
+        <testcase classname="src/services/CourseService.test.ts" name="CourseService &gt; updateCourse &gt; sends a PUT request with the updated course data" time="0.0055861">
+        </testcase>
+        <testcase classname="src/services/CourseService.test.ts" name="CourseService &gt; deleteCourse &gt; sends a DELETE request" time="0.0014375">
+        </testcase>
+    </testsuite>
+    <testsuite name="src/services/StudentService.test.ts" timestamp="2026-04-24T02:44:19.197Z" hostname="DESKTOP-0BQKLJ4" tests="5" failures="0" errors="0" skipped="0" time="0.0279039">
+        <testcase classname="src/services/StudentService.test.ts" name="StudentService &gt; getAllStudents &gt; sends a GET request and returns a list of students" time="0.0145632">
+        </testcase>
+        <testcase classname="src/services/StudentService.test.ts" name="StudentService &gt; createStudent &gt; sends a POST request and returns a JSON message object" time="0.0034283">
+        </testcase>
+        <testcase classname="src/services/StudentService.test.ts" name="StudentService &gt; addStudent &gt; sends a POST request and returns a string message" time="0.0015424">
+        </testcase>
+        <testcase classname="src/services/StudentService.test.ts" name="StudentService &gt; updateStudent &gt; sends a PUT request with the updated student data" time="0.0010344">
+        </testcase>
+        <testcase classname="src/services/StudentService.test.ts" name="StudentService &gt; deleteStudent &gt; sends a DELETE request for the specified ID" time="0.0009111">
+        </testcase>
+    </testsuite>
+</testsuites>
